@@ -47,11 +47,11 @@ api.add_resource(NameIdentifier, '/name')
 
 if __name__ == '__main__':
     # Load tokenizer
-    with open("models/tokenizer.pickle", 'rb') as f:
+    with open("models/both_generated_using_correct_names_20ktokenizer.pickle", 'rb') as f:
         tokenizer = pickle.load(f)
 
     # Load model
-    model = tf.keras.models.load_model('models/base_model')
+    model = tf.keras.models.load_model('models/both_generated_using_correct_names_20k_lstm_model.h5')
     print(model.summary())
 
     # Run the app in DEBUG MODE
