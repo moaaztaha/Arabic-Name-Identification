@@ -47,3 +47,4 @@ def plot_history(history:dict):
     plot_loss(history, plot=False)
     plt.subplot(1, 2, 2)
     plot_accuracy(history, plot=False)
+    plt.plot()
