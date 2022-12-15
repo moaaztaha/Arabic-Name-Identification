@@ -30,7 +30,7 @@ class NameIdentifier(Resource):
         
         # threshold
         correct = False
-        if prediction[0][0] > .8:
+        if prediction[0][0] > .80:
             correct = True
 
         result = {
@@ -39,7 +39,6 @@ class NameIdentifier(Resource):
             "prediction": f"{prediction[0][0]:.3f}",
             "is it a correct name": correct
         }
-        # return jsonify("{name recieved: {name_str} | name tokens: {name_toks} \nprediction: {prediction[0][0]:.3f} | Correct Name: {correct}}")
         return jsonify(result)
 
 
@@ -47,13 +46,13 @@ api.add_resource(NameIdentifier, '/name')
 
 if __name__ == '__main__':
     # Load tokenizer
-    with open("models/both_generated_using_correct_names_20ktokenizer.pickle", 'rb') as f:
+    with open("models/realdata_40k_lstm_over_engineered.pickle", 'rb') as f:
         tokenizer = pickle.load(f)
 
     # Load model
-    model = tf.keras.models.load_model('models/both_generated_using_correct_names_20k_lstm_model.h5')
+    model = tf.keras.models.load_model('models/realdata_40k_lstm_over_engineered.h5')
     print(model.summary())
-
+    print("Model used: realdata_40k_lstm_over_engineered.h5")
     # Run the app in DEBUG MODE
     port = int(os.environ.get('PORT', 5000))
     app.run(debug=True, host='0.0.0.0', port=port)
