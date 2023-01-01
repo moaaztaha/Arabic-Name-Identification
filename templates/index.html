@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Name Identification</h1>
+            <form onsubmit="submit_entry();return false">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" class="form-control" id="name" placeholder="Enter 3 words name">
+                </div>
+
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary" onclick="submit_entry()">Submit</button>
+                </div>
+                
+                <div class="form-group">
+                    <label>Is it a true name:</label>
+                    <label id="output"></label>
+                </div>
+                <div class="form-group">
+                    <label>Confidence:</label>
+                    <label id="output_conf"></label>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+
+<script>
+
+    function submit_entry() {
+        var name = document.getElementById("name");
+
+        var entry = {
+            name: name.value
+        };
+
+        fetch('/name', {
+            method: "POST",
+            credentials: "include",
+            body: JSON.stringify(entry),
+            cache: "no-cache",
+            headers: new Headers({
+                "content-type": "application/json"
+            })
+        })
+            .then(function (response) {
+                if (response.status !== 200) {
+                    console.log("Response Status ${response.status}")
+                    return;
+                }
+
+                response.json().then(function (data) {
+                    console.log(data)
+                    var is_it_correct = data['is it a correct name']
+                    document.getElementById("output").innerHTML = is_it_correct
+                    document.getElementById("output_conf").innerHTML = data['prediction']
+                })
+
+            })
+    }
+
+</script>
+
+{% endblock %}

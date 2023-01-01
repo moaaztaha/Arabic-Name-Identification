@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template, make_response
 from flask_restful import Api, Resource, reqparse
 import numpy as np
 import pickle
@@ -42,7 +42,18 @@ class NameIdentifier(Resource):
         return jsonify(result)
 
 
+class Index(Resource):
+    def __init__(self):
+        pass
+    def get(self):
+        headers = {'Content-Type': 'text/html'}
+
+        return make_response(render_template("index.html"), 200, headers)
+
+
+api.add_resource(Index, '/')
 api.add_resource(NameIdentifier, '/name')
+
 
 if __name__ == '__main__':
     # Load tokenizer
