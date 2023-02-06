@@ -1,22 +1,19 @@
-from flask import Flask, jsonify, render_template, make_response
-from flask_restful import Api, Resource, reqparse
-import numpy as np
-import pickle
-import json
 import os
+import pickle
 
 import tensorflow as tf
+from flask import Flask, jsonify, render_template, make_response
+from flask_restful import Api, Resource, reqparse
 
 app = Flask(__name__)
 api = Api(app)
-
 
 # Parser for the payload data
 parser = reqparse.RequestParser()
 parser.add_argument('name', type=str, help='name in arabic')
 
 
-# Recieving data through post request
+# Receiving data through post request
 class NameIdentifier(Resource):
     def post(self):
         args = parser.parse_args()
@@ -27,14 +24,14 @@ class NameIdentifier(Resource):
         name_toks = tokenizer.texts_to_sequences([name_str])
         # make prediction
         prediction = tf.nn.sigmoid(model.predict(name_toks)).numpy()
-        
+
         # threshold
         correct = False
         if prediction[0][0] > .80:
             correct = True
 
         result = {
-            "name recieved": name_str,
+            "name received": name_str,
             "name tokens": name_toks,
             "prediction": f"{prediction[0][0]:.3f}",
             "is it a correct name": correct
@@ -45,6 +42,7 @@ class NameIdentifier(Resource):
 class Index(Resource):
     def __init__(self):
         pass
+
     def get(self):
         headers = {'Content-Type': 'text/html'}
 
@@ -53,7 +51,6 @@ class Index(Resource):
 
 api.add_resource(Index, '/')
 api.add_resource(NameIdentifier, '/name')
-
 
 if __name__ == '__main__':
     # Load tokenizer
